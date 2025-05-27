@@ -1,15 +1,15 @@
-#include "constraint.hpp"
+#include "binding_force.hpp"
 
 // std
 #include <cmath>
 
-namespace utilities {
-  Constraint::Constraint(entities::Particle* currentParticle, entities::Particle* nextParticle): currentParticle(currentParticle), nextParticle(nextParticle) {
+namespace entities {
+  BindingForce::BindingForce(entities::Particle* currentParticle, entities::Particle* nextParticle): currentParticle(currentParticle), nextParticle(nextParticle) {
     sf::Vector2f delta = this->nextParticle->position - this->currentParticle->position;
     this->initialLength = std::hypot(delta.x, delta.y);
   }
 
-  void Constraint::apply(){
+  void BindingForce::apply(){
     sf::Vector2f delta = this->nextParticle->position - this->currentParticle->position;
     float currentLength = std::hypot(delta.x, delta.y);
     float deltaDistance = (currentLength - this->initialLength)/currentLength;

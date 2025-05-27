@@ -10,7 +10,7 @@ namespace entities {
 
       void applyGravity(const sf::Vector2f &gravity);
       void update(float timeStep);
-      void constraintByBound(float width, float height, float radius);
+      void BindingForceByBound(float width, float height, float radius);
 
     private: 
       sf::Vector2f previousPosition;

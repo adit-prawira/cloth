@@ -15,7 +15,7 @@ namespace entities {
     this->acceleration = sf::Vector2f(0.0f, 0.0f);
   };
   
-  void Particle::constraintByBound(float width, float height, float radius){
+  void Particle::BindingForceByBound(float width, float height, float radius){
     if(this->position.x < radius) this->position.x = radius;
     if(this->position.x > width - radius) this->position.x = width - radius;
     if(this->position.y < radius) this->position.y = radius;
