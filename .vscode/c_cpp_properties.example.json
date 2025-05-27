@@ -2,9 +2,7 @@
   "configurations": [
     {
       "name": "Mac",
-      "includePath": [
-        "${workspaceFolder}/**"
-      ],
+      "includePath": ["${workspaceFolder}/**"],
       "defines": [],
       "compilerPath": "/usr/bin/clang",
       "cStandard": "c17",
@@ -14,4 +12,3 @@
   ],
   "version": 4
 }
-
