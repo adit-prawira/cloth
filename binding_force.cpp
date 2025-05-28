@@ -18,9 +18,11 @@ namespace entities {
     sf::Vector2f correction = 0.5f * delta * deltaDistance;
 
     // current particle's vector point toward the next particle
-    this->currentParticle->position += correction;
+    // only apply position correction of unpinned particles
+    if(!this->currentParticle->isPinned) this->currentParticle->position += correction;
 
     // next particle's vector point toward the current particle
-    this->nextParticle->position -= correction;
+    // only apply position correction of unpinned particles
+    if(!this->nextParticle->isPinned) this->nextParticle->position -= correction;
   }
 }
