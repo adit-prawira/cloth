@@ -16,29 +16,35 @@ const float GRAVITY = 9.81f;
 const float TIMES_STEP = 0.1f;
 
 // Grid dimensions
-const int ROW = 10;
-const int COL = 10;
 const float DISTANCE = 50.0f;
 
 int main(){
+	int gridSize;
+
+	std::cout << "Enter the grid size: " << std::flush;
+	std::cin >> gridSize;
+	
+	const auto& totalRows = gridSize;
+	const auto& totalColumns = gridSize;
+
 	sf::RenderWindow window(sf::VideoMode({WIDTH, HEIGHT}), "Cloth Particle Simulation");
 	window.setFramerateLimit(FRAMERATE_LIMIT);
 
 	std::vector<entities::Particle> particles;
 	std::vector<entities::BindingForce> bindingForces;
 
-	for(int i = 0; i < ROW; i++){
-		for(int j = 0; j < COL; j ++){
+	for(int i = 0; i < totalRows; i++){
+		for(int j = 0; j < totalColumns; j ++){
 			float positionX = (j*DISTANCE) + WIDTH/3;
 			float positionY = (i*DISTANCE) + WIDTH/5;
 			particles.emplace_back(positionX, positionY);
 		}
 	}
 
-	for(int i = 0; i < ROW; i++){
-		for(int j = 0; j < COL; j++){
-			if(j < COL - 1) bindingForces.emplace_back(&particles[i*ROW + j], &particles[i*ROW + j + 1]);
-			if(i < ROW -1) bindingForces.emplace_back(&particles[i*ROW + j], &particles[(i+1) * COL + j]);
+	for(int i = 0; i < totalRows; i++){
+		for(int j = 0; j < totalColumns; j++){
+			if(j < totalColumns - 1) bindingForces.emplace_back(&particles[i*totalRows + j], &particles[i*totalRows + j + 1]);
+			if(i < totalRows -1) bindingForces.emplace_back(&particles[i*totalRows + j], &particles[(i+1) * totalColumns + j]);
 		}
 	}
 
