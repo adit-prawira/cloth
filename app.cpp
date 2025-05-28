@@ -47,10 +47,10 @@ namespace cloth {
 		for(int i = 0; i < row; i++){
 			for(int j  = 0; j < col; j++){
 				float positionX = (j*constants::PARTICLE_DISTANCE) + constants::WINDOW_WIDTH/4;
-				float positionY = (i*constants::PARTICLE_DISTANCE) + constants::WINDOW_HEIGHT/5;
-				bool pinned = i == 0;
-				std::string indicator =  pinned?"*":"-";
-				std::cout << "("<< positionX << ", " << positionY << ")" << indicator << " | ";
+				float positionY = (i*constants::PARTICLE_DISTANCE) + constants::WINDOW_HEIGHT/8;
+				bool pinned = i == 0 && (j <= static_cast<int>(std::floor(col/3)));
+				std::string indicator =  pinned?"*":"@";
+				std::cout << indicator << "("<< positionX << ", " << positionY << ")" << " | ";
 				this->particles.emplace_back(positionX, positionY, pinned);			
 			}
 			std::cout << std::endl;
