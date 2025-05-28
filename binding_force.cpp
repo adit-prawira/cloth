@@ -7,9 +7,11 @@ namespace entities {
   BindingForce::BindingForce(entities::Particle* currentParticle, entities::Particle* nextParticle): currentParticle(currentParticle), nextParticle(nextParticle) {
     sf::Vector2f delta = this->nextParticle->position - this->currentParticle->position;
     this->initialLength = std::hypot(delta.x, delta.y);
+    this->active = true;
   }
 
   void BindingForce::apply(){
+    if(!this->active) return;
     sf::Vector2f delta = this->nextParticle->position - this->currentParticle->position;
     float currentLength = std::hypot(delta.x, delta.y);
     float deltaDistance = (currentLength - this->initialLength)/currentLength;

@@ -11,7 +11,7 @@ namespace entities {
 			void apply();
 
 		private:
-			
+			bool active;
 			float initialLength;
 	};
 }
