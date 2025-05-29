@@ -12,7 +12,8 @@ namespace entities {
       void applyGravity(const sf::Vector2f &gravity);
       void update(float timeStep);
       void bindingForceByBound(float width, float height, float radius);
-
+      float getRadius();
+      void setPosition(float x, float y);
     private: 
       sf::Vector2f previousPosition;
       sf::Vector2f acceleration;

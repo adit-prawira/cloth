@@ -3,20 +3,37 @@
 
 // std
 #include <iostream>
+#include <cmath>
 
 namespace controls {
   // Publics
   void InputHandler::handleMouseClick(const sf::RenderWindow& window, std::vector<entities::Particle>& particles, std::vector<entities::BindingForce>& bindingForces){
       bool isMouseLeftClick = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
-      if(isMouseLeftClick){
-        sf::Vector2i position = sf::Mouse::getPosition(window);
-        float mouseCursorX = static_cast<float>(position.x);
-        float mouseCursorY = static_cast<float>(position.y);
-        controls::InputHandler::tearCloth(mouseCursorX, mouseCursorY, bindingForces);
-      }
+      bool isMouseRightClick = sf::Mouse::isButtonPressed(sf::Mouse::Button::Right);
+      sf::Vector2i position = sf::Mouse::getPosition(window);
+      float mouseCursorX = static_cast<float>(position.x);
+      float mouseCursorY = static_cast<float>(position.y);
+
+      if(isMouseLeftClick) controls::InputHandler::dragParticle(mouseCursorX, mouseCursorY, particles);
+
+      if(isMouseRightClick) controls::InputHandler::tearCloth(mouseCursorX, mouseCursorY, bindingForces);
+
   }
 
   // Privates
+  void InputHandler::dragParticle(float mouseCursorX, float mouseCursorY, std::vector<entities::Particle>& particles){
+    for(auto &particle:particles){
+      sf::Vector2f circleCenter = particle.position + sf::Vector2f(particle.getRadius(), particle.getRadius());
+      float deltaX = mouseCursorX  - circleCenter.x;
+      float deltaY = mouseCursorY - circleCenter.y;
+      float distance = std::sqrt((deltaX*deltaX) + (deltaY*deltaY));
+      bool isParticleClicked = distance <= (particle.getRadius() * particle.getRadius());
+      if(isParticleClicked && !particle.isPinned){
+        particle.setPosition(mouseCursorX, mouseCursorY);
+      }
+    }
+  }
+
   void InputHandler::tearCloth(float mouseCursorX, float mouseCursorY, const std::vector<entities::BindingForce>& bindingForces){  
       entities::BindingForce* nearestBindingForce = controls::InputHandler::findNearestBindingForce(mouseCursorX, mouseCursorY, bindingForces);
     

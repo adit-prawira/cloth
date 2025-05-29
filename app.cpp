@@ -85,7 +85,7 @@ namespace cloth {
 			float positionX = particle.position.x - constants::PARTICLE_RADIUS;
 			float positionY = particle.position.y - constants::PARTICLE_RADIUS;
 			sf::CircleShape circle(constants::PARTICLE_RADIUS);
-			circle.setFillColor(sf::Color::White);
+			circle.setFillColor(particle.isPinned?sf::Color::Magenta:sf::Color::White);
 			circle.setPosition({positionX, positionY});
 			this->window.draw(circle);
 		}
