@@ -6,31 +6,59 @@
 #include <cmath>
 
 namespace controls {
+  sf::Vector2f InputHandler::dragOffset = {0.0f, 0.0f};
+  size_t InputHandler::draggingIndex = -1;
+  bool InputHandler::isDragging = false;
+
   // Publics
-  void InputHandler::handleMouseClick(const sf::RenderWindow& window, std::vector<entities::Particle>& particles, std::vector<entities::BindingForce>& bindingForces){
+  void InputHandler::streamMouseEvent(const sf::RenderWindow& window, std::vector<entities::Particle>& particles, std::vector<entities::BindingForce>& bindingForces){
+      
       bool isMouseLeftClick = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+
       bool isMouseRightClick = sf::Mouse::isButtonPressed(sf::Mouse::Button::Right);
       sf::Vector2i position = sf::Mouse::getPosition(window);
       float mouseCursorX = static_cast<float>(position.x);
       float mouseCursorY = static_cast<float>(position.y);
 
-      if(isMouseLeftClick) controls::InputHandler::dragParticle(mouseCursorX, mouseCursorY, particles);
+      if(isMouseLeftClick){
+        controls::InputHandler::dragParticle(mouseCursorX, mouseCursorY, particles);
+      }else {
+        controls::InputHandler::resetDragState();
+      }
 
       if(isMouseRightClick) controls::InputHandler::tearCloth(mouseCursorX, mouseCursorY, bindingForces);
+
 
   }
 
   // Privates
   void InputHandler::dragParticle(float mouseCursorX, float mouseCursorY, std::vector<entities::Particle>& particles){
-    for(auto &particle:particles){
+    
+    for(size_t i = 0; i < particles.size(); i ++){
+      auto& particle = particles[i];
       sf::Vector2f circleCenter = particle.position + sf::Vector2f(particle.getRadius(), particle.getRadius());
       float deltaX = mouseCursorX  - circleCenter.x;
       float deltaY = mouseCursorY - circleCenter.y;
       float distance = std::sqrt((deltaX*deltaX) + (deltaY*deltaY));
       bool isParticleClicked = distance <= (particle.getRadius() * particle.getRadius());
       if(isParticleClicked && !particle.isPinned){
-        particle.setPosition(mouseCursorX, mouseCursorY);
+        controls::InputHandler::draggingIndex = i;
+        controls::InputHandler::isDragging = true;
+        float offSetX = particle.position.x - mouseCursorX;
+        float offSetY = particle.position.y - mouseCursorY;
+        controls::InputHandler::dragOffset = {offSetX, offSetY};
       }
+    }
+
+    bool isValidToUpdatePosition = controls::InputHandler::isDragging 
+      && (controls::InputHandler::draggingIndex != -1) 
+      && (controls::InputHandler::dragOffset.x != 0.0f)
+      && (controls::InputHandler::dragOffset.y != 0.0f);
+    if(isValidToUpdatePosition){
+      particles[controls::InputHandler::draggingIndex].setPosition(
+        mouseCursorX + controls::InputHandler::dragOffset.x,
+        mouseCursorY + controls::InputHandler::dragOffset.y
+      );
     }
   }
 
@@ -91,5 +119,9 @@ namespace controls {
     return std::sqrt((deltaX * deltaX) + (deltaY*deltaY));
   }
 
-
+  void InputHandler::resetDragState(){
+    controls::InputHandler::dragOffset = {0.0f, 0.0f};
+    controls::InputHandler::draggingIndex = -1;
+    controls::InputHandler::isDragging = false;
+  }
 }

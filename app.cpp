@@ -28,7 +28,7 @@ namespace cloth {
 				if(event->is<sf::Event::Closed>()){
 					this->window.close();
 				}
-				controls::InputHandler::handleMouseClick(this->window, this->particles, this->bindingForces);
+				controls::InputHandler::streamMouseEvent(this->window, this->particles, this->bindingForces);
 			}
 			this->applyMotion();
 			this->window.clear(sf::Color::Black);
