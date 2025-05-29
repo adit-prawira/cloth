@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "app.hpp"
 #include "constant.hpp"
+#include "input_handler.hpp"
 
 // std
 #include <iostream>
@@ -27,6 +28,7 @@ namespace cloth {
 				if(event->is<sf::Event::Closed>()){
 					this->window.close();
 				}
+				controls::InputHandler::handleMouseClick(this->window, this->particles, this->bindingForces);
 			}
 			this->applyMotion();
 			this->window.clear(sf::Color::Black);
@@ -48,7 +50,7 @@ namespace cloth {
 			for(int j  = 0; j < col; j++){
 				float positionX = (j*constants::PARTICLE_DISTANCE) + constants::WINDOW_WIDTH/4;
 				float positionY = (i*constants::PARTICLE_DISTANCE) + constants::WINDOW_HEIGHT/8;
-				bool pinned = i == 0 && (j <= static_cast<int>(std::floor(col/3)));
+				bool pinned = i == 0;
 				std::string indicator =  pinned?"*":"@";
 				std::cout << indicator << "("<< positionX << ", " << positionY << ")" << " | ";
 				this->particles.emplace_back(positionX, positionY, pinned);			
@@ -88,7 +90,8 @@ namespace cloth {
 			this->window.draw(circle);
 		}
 
-		for(const auto &bindingForce: this->bindingForces){
+		for(auto &bindingForce: this->bindingForces){
+			if(!bindingForce.isActive()) continue;
 			sf::Vector2f currentParticlePosition = bindingForce.currentParticle->position;
 			sf::Vertex currentParticleVertexPosition{currentParticlePosition, sf::Color::White};
 

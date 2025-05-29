@@ -25,4 +25,12 @@ namespace entities {
     // only apply position correction of unpinned particles
     if(!this->nextParticle->isPinned) this->nextParticle->position -= correction;
   }
+
+  void BindingForce::deactivate(){
+    this->active = false;
+  }
+
+  bool BindingForce::isActive(){
+    return this->active;
+  }
 }
