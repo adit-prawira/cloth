@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "app.hpp"
 #include "constant.hpp"
-#include "input_handler.hpp"
+#include "mouse_input_event.hpp"
 
 // std
 #include <iostream>
@@ -28,7 +28,7 @@ namespace cloth {
 				if(event->is<sf::Event::Closed>()){
 					this->window.close();
 				}
-				controls::InputHandler::streamMouseEvent(this->window, this->particles, this->bindingForces);
+				controls::MouseInputEvent::stream(this->window, this->particles, this->bindingForces);
 			}
 			this->applyMotion();
 			this->window.clear(sf::Color::Black);

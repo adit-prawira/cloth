@@ -7,9 +7,9 @@
 #include <cmath>
 
 namespace controls {
-	class InputHandler {
+	class MouseInputEvent {
 		public:
-			static void streamMouseEvent(const sf::RenderWindow& window, std::vector<entities::Particle>& particles, std::vector<entities::BindingForce>& bindingForces);
+			static void stream(const sf::RenderWindow& window, std::vector<entities::Particle>& particles, std::vector<entities::BindingForce>& bindingForces);
 		private:
 			static bool isDragging;
 			static size_t draggingIndex;

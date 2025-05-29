@@ -1,4 +1,4 @@
-#include "input_handler.hpp"
+#include "mouse_input_event.hpp"
 #include "constant.hpp"
 
 // std
@@ -6,12 +6,12 @@
 #include <cmath>
 
 namespace controls {
-  sf::Vector2f InputHandler::dragOffset = {0.0f, 0.0f};
-  size_t InputHandler::draggingIndex = -1;
-  bool InputHandler::isDragging = false;
+  sf::Vector2f MouseInputEvent::dragOffset = {0.0f, 0.0f};
+  size_t MouseInputEvent::draggingIndex = -1;
+  bool MouseInputEvent::isDragging = false;
 
   // Publics
-  void InputHandler::streamMouseEvent(const sf::RenderWindow& window, std::vector<entities::Particle>& particles, std::vector<entities::BindingForce>& bindingForces){
+  void MouseInputEvent::stream(const sf::RenderWindow& window, std::vector<entities::Particle>& particles, std::vector<entities::BindingForce>& bindingForces){
       
       bool isMouseLeftClick = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
 
@@ -21,18 +21,18 @@ namespace controls {
       float mouseCursorY = static_cast<float>(position.y);
 
       if(isMouseLeftClick){
-        controls::InputHandler::dragParticle(mouseCursorX, mouseCursorY, particles);
+        controls::MouseInputEvent::dragParticle(mouseCursorX, mouseCursorY, particles);
       }else {
-        controls::InputHandler::resetDragState();
+        controls::MouseInputEvent::resetDragState();
       }
 
-      if(isMouseRightClick) controls::InputHandler::tearCloth(mouseCursorX, mouseCursorY, bindingForces);
+      if(isMouseRightClick) controls::MouseInputEvent::tearCloth(mouseCursorX, mouseCursorY, bindingForces);
 
 
   }
 
   // Privates
-  void InputHandler::dragParticle(float mouseCursorX, float mouseCursorY, std::vector<entities::Particle>& particles){
+  void MouseInputEvent::dragParticle(float mouseCursorX, float mouseCursorY, std::vector<entities::Particle>& particles){
     
     for(size_t i = 0; i < particles.size(); i ++){
       auto& particle = particles[i];
@@ -42,38 +42,38 @@ namespace controls {
       float distance = std::sqrt((deltaX*deltaX) + (deltaY*deltaY));
       bool isParticleClicked = distance <= (particle.getRadius() * particle.getRadius());
       if(isParticleClicked && !particle.isPinned){
-        controls::InputHandler::draggingIndex = i;
-        controls::InputHandler::isDragging = true;
+        controls::MouseInputEvent::draggingIndex = i;
+        controls::MouseInputEvent::isDragging = true;
         float offSetX = particle.position.x - mouseCursorX;
         float offSetY = particle.position.y - mouseCursorY;
-        controls::InputHandler::dragOffset = {offSetX, offSetY};
+        controls::MouseInputEvent::dragOffset = {offSetX, offSetY};
       }
     }
 
-    bool isValidToUpdatePosition = controls::InputHandler::isDragging 
-      && (controls::InputHandler::draggingIndex != -1) 
-      && (controls::InputHandler::dragOffset.x != 0.0f)
-      && (controls::InputHandler::dragOffset.y != 0.0f);
+    bool isValidToUpdatePosition = controls::MouseInputEvent::isDragging 
+      && (controls::MouseInputEvent::draggingIndex != -1) 
+      && (controls::MouseInputEvent::dragOffset.x != 0.0f)
+      && (controls::MouseInputEvent::dragOffset.y != 0.0f);
     if(isValidToUpdatePosition){
-      particles[controls::InputHandler::draggingIndex].setPosition(
-        mouseCursorX + controls::InputHandler::dragOffset.x,
-        mouseCursorY + controls::InputHandler::dragOffset.y
+      particles[controls::MouseInputEvent::draggingIndex].setPosition(
+        mouseCursorX + controls::MouseInputEvent::dragOffset.x,
+        mouseCursorY + controls::MouseInputEvent::dragOffset.y
       );
     }
   }
 
-  void InputHandler::tearCloth(float mouseCursorX, float mouseCursorY, const std::vector<entities::BindingForce>& bindingForces){  
-      entities::BindingForce* nearestBindingForce = controls::InputHandler::findNearestBindingForce(mouseCursorX, mouseCursorY, bindingForces);
+  void MouseInputEvent::tearCloth(float mouseCursorX, float mouseCursorY, const std::vector<entities::BindingForce>& bindingForces){  
+      entities::BindingForce* nearestBindingForce = controls::MouseInputEvent::findNearestBindingForce(mouseCursorX, mouseCursorY, bindingForces);
     
       // binding force touched by mouse is found
       if(nearestBindingForce)  nearestBindingForce->deactivate();
   }
 
-  entities::BindingForce* InputHandler::findNearestBindingForce(float mouseCursorX, float mouseCursorY, const std::vector<entities::BindingForce>& bindinForces){
+  entities::BindingForce* MouseInputEvent::findNearestBindingForce(float mouseCursorX, float mouseCursorY, const std::vector<entities::BindingForce>& bindinForces){
     entities::BindingForce* nearestBindingForce = nullptr;
     float minimumDistance = constants::CLICK_TOLERANCE;
     for(const auto &bindingForce : bindinForces){
-      float distance = controls::InputHandler::pointToSegmentDistance(
+      float distance = controls::MouseInputEvent::pointToSegmentDistance(
         mouseCursorX, 
         mouseCursorY, 
         bindingForce.currentParticle->position.x, 
@@ -91,7 +91,7 @@ namespace controls {
     return nearestBindingForce;
   }
 
-  float InputHandler::pointToSegmentDistance(float px, float py, float ax, float ay, float bx, float by){
+  float MouseInputEvent::pointToSegmentDistance(float px, float py, float ax, float ay, float bx, float by){
     float ABx = bx - ax;
     float ABy = by - ay;
 
@@ -119,9 +119,9 @@ namespace controls {
     return std::sqrt((deltaX * deltaX) + (deltaY*deltaY));
   }
 
-  void InputHandler::resetDragState(){
-    controls::InputHandler::dragOffset = {0.0f, 0.0f};
-    controls::InputHandler::draggingIndex = -1;
-    controls::InputHandler::isDragging = false;
+  void MouseInputEvent::resetDragState(){
+    controls::MouseInputEvent::dragOffset = {0.0f, 0.0f};
+    controls::MouseInputEvent::draggingIndex = -1;
+    controls::MouseInputEvent::isDragging = false;
   }
 }
