@@ -2,7 +2,10 @@
   "configurations": [
     {
       "name": "Mac",
-      "includePath": ["${workspaceFolder}/**"],
+      "includePath": [
+        "${workspaceFolder}/**",
+        "REPLACE_WITH_SFML_PATH/include"
+      ],
       "defines": [],
       "compilerPath": "/usr/bin/clang",
       "cStandard": "c17",
