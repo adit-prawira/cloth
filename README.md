@@ -33,3 +33,4 @@ Note: The program is written in with Mac OS machine, thus Windows guideline is n
 - Execute `make clean && make && ./a.out`
 
 ### Demo
+![demo](https://github.com/user-attachments/assets/285e4991-5bb8-4af9-a9a0-f5d269d9c563)
