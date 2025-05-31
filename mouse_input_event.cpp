@@ -40,7 +40,7 @@ namespace controls {
       float deltaX = mouseCursorX  - circleCenter.x;
       float deltaY = mouseCursorY - circleCenter.y;
       float distance = std::sqrt((deltaX*deltaX) + (deltaY*deltaY));
-      bool isParticleClicked = distance <= (particle.getRadius() * particle.getRadius());
+      bool isParticleClicked = distance <= (particle.getRadius());
       if(isParticleClicked && !particle.isPinned){
         controls::MouseInputEvent::draggingIndex = i;
         controls::MouseInputEvent::isDragging = true;
